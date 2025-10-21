@@ -127,7 +127,7 @@
 
         .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-top: 20px;
         }
@@ -137,6 +137,9 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
         }
 
         .input-group {
@@ -197,6 +200,9 @@
             border-radius: 10px;
             margin-top: 20px;
             border-left: 4px solid var(--secondary-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
         }
 
         .formula-box {
@@ -205,6 +211,8 @@
             border-radius: 10px;
             margin: 20px 0;
             border-left: 4px solid var(--warning-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .example-box {
@@ -213,6 +221,8 @@
             border-radius: 10px;
             margin: 20px 0;
             border-left: 4px solid var(--success-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .info-box {
@@ -221,6 +231,8 @@
             border-radius: 8px;
             margin: 15px 0;
             border-left: 4px solid var(--secondary-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .warning-box {
@@ -229,6 +241,8 @@
             border-radius: 8px;
             margin: 15px 0;
             border-left: 4px solid var(--warning-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .stat-display {
@@ -310,12 +324,15 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            table-layout: auto;
         }
 
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         th {
@@ -353,12 +370,49 @@
             color: var(--primary-color);
             margin-top: 20px;
             margin-bottom: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         h4 {
             color: var(--secondary-color);
             margin-top: 15px;
             margin-bottom: 8px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        p {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+        
+        /* Estilos para fórmulas matemáticas responsivas */
+        .MathJax {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+            display: inline-block;
+        }
+        
+        mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100% !important;
+            display: inline-block !important;
+        }
+        
+        mjx-container[display="true"] {
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            max-width: 100% !important;
+        }
+        
+        /* Evitar que MathJax cause overflow */
+        .formula-box mjx-container,
+        .card mjx-container {
+            max-width: 100% !important;
         }
 
         .button-group {
@@ -376,6 +430,12 @@
             background: #229954;
         }
 
+        @media (max-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .grid-2 {
                 grid-template-columns: 1fr;
@@ -391,6 +451,46 @@
 
             .tab-button {
                 min-width: 100%;
+            }
+            
+            .formula-box, .info-box, .warning-box, .example-box, .result-box {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            table {
+                font-size: 0.9em;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+            
+            /* Fórmulas más pequeñas en móvil */
+            mjx-container {
+                font-size: 90% !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            table {
+                font-size: 0.8em;
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .formula-box, .info-box, .warning-box, .example-box, .result-box {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+            
+            /* Fórmulas aún más pequeñas en pantallas muy pequeñas */
+            mjx-container {
+                font-size: 80% !important;
             }
         }
     </style>
@@ -584,18 +684,22 @@
 
                 <div class="card">
                     <h3>Interpretación</h3>
-                    <div class="formula-box">
+                    <div class="formula-box" style="overflow-x: auto;">
                         <h4>Valor Predictivo Positivo (VPP)</h4>
                         <p>Probabilidad de tener la enfermedad dado un resultado positivo:</p>
-                        <p style="text-align: center;">
-                            $$VPP = P(E^+|T^+) = \frac{Sensibilidad \times Prevalencia}{Sensibilidad \times Prevalencia + (1-Especificidad) \times (1-Prevalencia)}$$
-                        </p>
+                        <div style="overflow-x: auto; margin: 15px 0;">
+                            <p style="text-align: center; min-width: max-content;">
+                                $$VPP = P(E^+|T^+) = \frac{Sens. \times Prev.}{Sens. \times Prev. + (1-Espec.) \times (1-Prev.)}$$
+                            </p>
+                        </div>
                         
                         <h4 style="margin-top: 20px;">Valor Predictivo Negativo (VPN)</h4>
                         <p>Probabilidad de NO tener la enfermedad dado un resultado negativo:</p>
-                        <p style="text-align: center;">
-                            $$VPN = P(E^-|T^-) = \frac{Especificidad \times (1-Prevalencia)}{(1-Sensibilidad) \times Prevalencia + Especificidad \times (1-Prevalencia)}$$
-                        </p>
+                        <div style="overflow-x: auto; margin: 15px 0;">
+                            <p style="text-align: center; min-width: max-content;">
+                                $$VPN = P(E^-|T^-) = \frac{Espec. \times (1-Prev.)}{(1-Sens.) \times Prev. + Espec. \times (1-Prev.)}$$
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1097,22 +1201,32 @@
             
             html += '<div class="formula-box" style="margin-top: 20px;">';
             html += '<h4>Interpretación:</h4>';
-            html += `<p><strong>Si la prueba da POSITIVO:</strong> La probabilidad de realmente tener la enfermedad es del <span class="highlight">${(vpp * 100).toFixed(2)}%</span></p>`;
-            html += `<p><strong>Si la prueba da NEGATIVO:</strong> La probabilidad de realmente NO tener la enfermedad es del <span class="highlight">${(vpn * 100).toFixed(2)}%</span></p>`;
+            html += `<p style="margin-bottom: 12px;"><strong>Si la prueba da POSITIVO:</strong></p>`;
+            html += `<p>La probabilidad de realmente tener la enfermedad es del <span class="highlight">${(vpp * 100).toFixed(2)}%</span></p>`;
+            html += `<p style="margin-top: 15px; margin-bottom: 12px;"><strong>Si la prueba da NEGATIVO:</strong></p>`;
+            html += `<p>La probabilidad de realmente NO tener la enfermedad es del <span class="highlight">${(vpn * 100).toFixed(2)}%</span></p>`;
             html += '</div>';
             
             html += '<div class="info-box">';
             html += '<h4>💡 Análisis Clínico</h4>';
             if (vpp < 0.5) {
-                html += '<p style="color: #e74c3c;">⚠️ <strong>El VPP es bajo:</strong> Un resultado positivo tiene menos del 50% de probabilidad de indicar enfermedad real. Se recomienda confirmar con una segunda prueba.</p>';
+                html += '<p style="color: #e74c3c; margin-bottom: 10px;">⚠️ <strong>El VPP es bajo:</strong></p>';
+                html += '<p>Un resultado positivo tiene menos del 50% de probabilidad de indicar enfermedad real.</p>';
+                html += '<p>Se recomienda confirmar con una segunda prueba.</p>';
             } else if (vpp > 0.9) {
-                html += '<p style="color: #27ae60;">✓ <strong>El VPP es alto:</strong> Un resultado positivo es muy confiable. La prueba es útil para confirmar la presencia de enfermedad.</p>';
+                html += '<p style="color: #27ae60; margin-bottom: 10px;">✓ <strong>El VPP es alto:</strong></p>';
+                html += '<p>Un resultado positivo es muy confiable.</p>';
+                html += '<p>La prueba es útil para confirmar la presencia de enfermedad.</p>';
             } else {
-                html += '<p style="color: #f39c12;">⚬ <strong>El VPP es moderado:</strong> Un resultado positivo debe ser interpretado con precaución. Considere el contexto clínico.</p>';
+                html += '<p style="color: #f39c12; margin-bottom: 10px;">⚬ <strong>El VPP es moderado:</strong></p>';
+                html += '<p>Un resultado positivo debe ser interpretado con precaución.</p>';
+                html += '<p>Considere el contexto clínico.</p>';
             }
             
             if (vpn > 0.95) {
-                html += '<p style="color: #27ae60;">✓ <strong>El VPN es excelente:</strong> Un resultado negativo prácticamente descarta la enfermedad. Esta prueba es muy útil para screening.</p>';
+                html += '<p style="color: #27ae60; margin-top: 15px; margin-bottom: 10px;">✓ <strong>El VPN es excelente:</strong></p>';
+                html += '<p>Un resultado negativo prácticamente descarta la enfermedad.</p>';
+                html += '<p>Esta prueba es muy útil para screening.</p>';
             }
             html += '</div>';
             
